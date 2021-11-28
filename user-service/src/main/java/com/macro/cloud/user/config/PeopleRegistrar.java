@@ -1,6 +1,8 @@
 package com.macro.cloud.user.config;
 
 import com.macro.cloud.user.domain.Person;
+import com.macro.cloud.user.factory.MyMapperFactoryBean;
+import com.macro.cloud.user.mapper.UserMapper;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
@@ -12,13 +14,9 @@ public class PeopleRegistrar implements ImportBeanDefinitionRegistrar {
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
         RootBeanDefinition rootBeanDefinition = new RootBeanDefinition();
-        rootBeanDefinition.setBeanClass(Person.class);
-        rootBeanDefinition.setInstanceSupplier(PeopleRegistrar::getPerson);
-        Arrays.stream(registry.getBeanDefinitionNames()).forEach(c -> System.out.println(c));
-        registry.registerBeanDefinition("peopleFromSupplier1", rootBeanDefinition);
-    }
+        rootBeanDefinition.setBeanClass(MyMapperFactoryBean.class);
+        rootBeanDefinition.getConstructorArgumentValues().addGenericArgumentValue(UserMapper.class);
 
-    public static Person getPerson() {
-        return new Person();
+        registry.registerBeanDefinition("userMapper", rootBeanDefinition);
     }
 }
